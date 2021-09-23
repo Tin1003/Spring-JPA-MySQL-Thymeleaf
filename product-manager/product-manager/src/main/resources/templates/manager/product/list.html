@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" th:replace="layout/layout::layout(
+    ~{::title},
+    ~{::#staticResource1},
+    ~{::#artice},
+    ~{::#staticResource2}
+)">
+
+<head>
+    <title>Product List</title>
+
+</head>
+
+<body>
+
+    <div class="container" id="artice" th:with="products=${page.content},url='product'">
+        <h1 class="mt-4 mb-4">Product List</h1>
+        <div>
+            <a th:href="@{/product/create/}" role="button" class="btn btn-primary btn-lg">Add new Product</a>
+        </div>
+        <br>
+        <table class="table table-bordered border-primary table-hover table-striped" aria-label="product">
+            <thead>
+                <tr>
+                    <th scope="col">
+                        <a id="id" class="sort-field">ID</a>
+                    </th>
+                    <th scope="col">
+                        <a id="name" class="sort-field">Name</a>
+                    </th>
+                    <th scope="col">
+                        <a id="price" class="sort-field">Price</a>
+                    </th>
+                    <th scope="col">
+                        <a id="category.name" class="sort-field">Category</a>
+                    </th>
+                    <th scope="col">Detail</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="product : ${products}" th:object="${product}">
+                    <th scope="row" th:text="*{getId()}">1</th>
+                    <td th:text="*{getName()}">Mark</td>
+                    <td th:text="*{getPrice()}">@mdo</td>
+                    <td th:if="*{category}" th:text="*{getCategory().getName()}">Otto</td>
+                    <td th:unless=*{category}>NULL</td>
+                    <td th:text="*{productDetails}">@mdo</td>
+                    <th:block th:replace="fragment/table::action(${url},*{getId()})"></th:block>
+                </tr>
+            </tbody>
+        </table>
+
+        <th:block th:replace="fragment/paging::paging(${page},${url})"></th:block>
+
+    </div>
+
+
+    <th:block id="staticResource2">
+        <th:block th:replace="fragment/table::sort-script"></th:block>
+    </th:block>
+</body>
+
+</html>

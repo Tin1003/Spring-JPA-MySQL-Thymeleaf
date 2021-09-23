@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" th:replace="layout/layout::layout(
+    ~{::title},
+    ~{::#staticResource1},
+    ~{::#artice},
+    ~{::#staticResource2}
+)">
+
+<head>
+    <title th:text="${product.id} ? 'Edit Product' : 'Create New Product'">Document</title>
+</head>
+
+<body>
+    <div class="container col-5" id="artice">
+        <h1 th:text="${product.id} ? 'Edit Product' : 'Create New Product'" class="mt-4 mb-4"></h1>
+        <form th:object="${product}" th:action="*{id} ? @{/product/{id}/edit(id=*{id})} : @{/product/create}"
+            method="POST">
+            <th:block>
+                <input type="hidden" th:field="*{id}">
+            </th:block>
+            <div class="mb-3">
+                <label class="form-label">Name</label>
+                <input type="text" class="form-control" th:field="*{name}" th:errorClass="is-invalid">
+                <div th:if="${#fields.hasErrors('name')}" class="invalid-feedback" th:errors="*{name}">VALIDATION.</div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Price</label>
+                <input type="number" class="form-control" th:field="*{price}" th:errorClass="is-invalid">
+                <div th:if="${#fields.hasErrors('price')}" class="invalid-feedback" th:errors="*{price}">VALIDATION.
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Category</label>
+                <select class="form-select" th:field="*{category.id}" th:errorClass="is-invalid">
+                    <option th:value="0">--Category--</option>
+                    <option th:each="category : ${categories}" th:text="${category.name}" th:value="${category.id}">One
+                    </option>
+                </select>
+                <div th:if="${#fields.hasErrors('category.id')}" class="invalid-feedback" th:errors="*{category.id}">
+                    VALIDATION.
+                </div>
+            </div>
+            <th:block>
+                <h5>Detail:</h5>
+                <div class="mt-4 mb-3">
+                    <a role="button" class="btn btn-outline-primary btn-sm"
+                        th:href="@{${#request.requestURI}(numOfDetail=${size +1} )}">
+                        Thêm Detail
+                    </a>
+                    <a role="button" class="btn btn-outline-primary btn-sm" th:classappend="${size} ==0 ? 'disabled'"
+                        th:href="@{${#request.requestURI}(numOfDetail=${size -1})}">
+                        Giảm Detail
+                    </a>
+                </div>
+                <div class="row mb-3" th:each="index :${#numbers.sequence(0,size)}">
+                    <div class="col-6">
+                        <input type="text" class="form-control " th:errorClass="is-invalid" placeholder="name"
+                            th:field="*{productDetails[__${index}__].name}">
+                        <div th:if="${#fields.hasErrors('productDetails[' + index + '].name')}" class="invalid-feedback"
+                            th:errors="*{productDetails[__${index}__].name}">VALIDATION.
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <input type="text" class="form-control" placeholder="value" th:errorClass="is-invalid"
+                            th:field="*{productDetails[__${index}__].value}">
+                        <div th:if="${#fields.hasErrors('productDetails[' +index + '].value')}"
+                            th:errors="*{productDetails[__${index}__].value}" class="invalid-feedback">VALIDATION.
+                        </div>
+                    </div>
+                </div>
+            </th:block>
+            <button type="submit" class="btn btn-primary btn-lg">Submit</button>
+        </form>
+    </div>
+</body>
+
+</html>

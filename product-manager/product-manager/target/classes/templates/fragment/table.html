@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Document</title>
+</head>
+
+
+
+<body>
+    <!-- Action delete + Edit -->
+    <td th:fragment="action(url,id)">
+        <a th:href="@{/{url}/{id}/edit(id=*{getId()},url=${url})}" role="button"
+            class="btn btn-outline-info btn-sm">Edit</a>
+        <a th:href="@{/{url}/{id}/delete(id=*{getId()},url=${url})}" role="button"
+            class="btn btn-outline-danger btn-sm">Delete</a>
+    </td>
+    <!-- Sort -->
+    <script th:inline="javascript" th:fragment="sort-script">
+        var sortParams = /*[[${ param.sort }]]*/[];
+        sortParams = sortParams ?? [];
+        sortParams = sortParams.map(str => str.split(',')).filter(c => c.length != 1);
+
+        let sortFields = document.querySelectorAll(".sort-field");
+        for (const aEle of sortFields) {
+            let indexOldSort = sortParams.findIndex(arr => arr[0] === aEle.id);
+            let iEle = document.createElement("i");
+            let arrayOpe;
+
+            if (indexOldSort == -1) {
+                arrayOpe = () => sortParams.push([aEle.id, "asc"]);
+            } else if (sortParams[indexOldSort][1] === `asc`) {
+                iEle.classList = "bi bi-sort-alpha-down";
+                arrayOpe = () => sortParams[indexOldSort] = [aEle.id, "desc"];
+            } else {
+                iEle.classList = "bi bi-sort-alpha-up";
+                arrayOpe = () => sortParams.splice(indexOldSort, 1);
+            }
+            aEle.addEventListener("click", (e) => {
+                e.preventDefault();
+                arrayOpe();
+                let query = sortParams.reduce((prev, cur) => `${prev}&sort=${cur[0]},${cur[1]}`, "?");
+                window.location.replace(query);
+            });
+            aEle.appendChild(iEle);
+        }
+    </script>
+</body>
+
+</html>

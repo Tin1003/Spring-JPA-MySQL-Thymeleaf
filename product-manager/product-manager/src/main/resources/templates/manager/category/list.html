@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" th:replace="layout/layout::layout(
+    ~{::title},
+    ~{::#staticResource1},
+    ~{::#artice},
+    ~{::#staticResource2}
+)">
+
+<head>
+    <title>Category List</title>
+
+</head>
+
+<body>
+
+    <div class="container" id="artice" th:with="categories=${page.content},url='category'">
+        <h1 class="mt-4 mb-4">Category List</h1>
+        <div>
+            <a th:href="@{/category/create/}" role="button" class="btn btn-primary btn-lg">Add new Category</a>
+        </div>
+        <br>
+        <table class="table table-bordered border-primary table-hover table-striped" aria-label="product">
+            <thead>
+                <tr>
+                    <th scope="col">
+                        <a id="id" class="sort-field">ID</a>
+                    </th>
+                    <th scope="col">
+                        <a id="name" class="sort-field">Name</a>
+                    </th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="category : ${categories}" th:object="${category}">
+                    <th scope="row" th:text="*{id}">1</th>
+                    <td th:text="*{getName()}">Mark</td>
+                    <th:block th:replace="fragment/table::action(${url},*{id})"></th:block>
+                </tr>
+            </tbody>
+        </table>
+
+        <th:block th:replace="fragment/paging::paging(${page},${url})"></th:block>
+
+    </div>
+
+
+    <th:block id="staticResource2">
+        <th:block th:replace="fragment/table::sort-script"></th:block>
+    </th:block>
+</body>
+
+</html>

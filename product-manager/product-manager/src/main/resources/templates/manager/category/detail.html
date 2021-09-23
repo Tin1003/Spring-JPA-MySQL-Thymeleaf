@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" th:replace="layout/layout::layout(
+    ~{::title},
+    ~{::#staticResource1},
+    ~{::#artice},
+    ~{::#staticResource2}
+)">
+
+<head>
+    <title th:text="${category.id} ? 'Edit Category' : 'Create New Category'">Document</title>
+</head>
+
+<body>
+    <div class="container col-5 " id="artice">
+        <h1 th:text="${category.id} ? 'Edit Category' : 'Create New Category'" class="mt-4 mb-4"></h1>
+        <form th:object="${category}" th:action="*{id} ? @{/category/{id}/edit(id=*{id})} : @{/category/create}"
+            method="POST">
+            <th:block>
+                <input type="hidden" th:field=*{id}>
+            </th:block>
+            <div class="mb-3">
+                <input type="text" class="form-control" th:field="*{name}" th:errorClass="is-invalid">
+                <div th:if="${#fields.hasErrors('name')}" class="invalid-feedback" th:errors="*{name}">VALIDATION.
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" th:replace="layout/layout::layout(
+    ~{::title},
+    ~{::#staticResource1},
+    ~{::#artice},
+    ~{::#staticResource2}
+)">
+
+<head>
+    <title th:text="${brand.id} ? 'Edit Brand' : 'Create New Brand'">Document</title>
+</head>
+
+<body>
+    <div class="container col-5" id="artice">
+        <h1 th:text="${brand.id} ? 'Edit Brand' : 'Create New Brand'" class="mt-4 mb-4"></h1>
+        <form th:object="${brand}" th:action="*{id} ? @{/brand/{id}/edit(id=*{id})} : @{/brand/create}" method="POST">
+            <div class="mb-3">
+                <label class="form-label">BrandName</label>
+                <input type="text" class="form-control" th:field="*{name}" th:errorClass="is-invalid">
+                <div th:if="${#fields.hasErrors('name')}" class="invalid-feedback" th:errors="*{name}">VALIDATION.
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Category</label>
+                <select class="form-select" multiple th:field="*{categories}" th:errorClass="is-invalid">
+                    <option th:each="category : ${categories}" th:text="${category.name}" th:value="${category.id}">One
+                    </option>
+                </select>
+                <div th:if="${#fields.hasErrors('categories')}" class="invalid-feedback" th:errors="*{categories}">
+                    VALIDATION.
+                </div>
+
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+</body>
+
+</html>
